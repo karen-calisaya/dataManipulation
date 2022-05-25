@@ -40,21 +40,45 @@ const moviesController = {
             .then(movies => {
                 res.render('recommendedMovies.ejs', {movies});
             });
-    }, //Aqui debemos modificar y completar lo necesario para trabajar con el CRUD
+    }, 
     add: function (req, res) {
-        // TODO   
+        res.render('moviesAdd')
     },
     create: function (req, res) {
-        // TODO
+        db.Movie.create({
+            title: req.body.title,
+            rating: req.body.rating,
+            length: req.body.length,
+            awards: req.body.awards,
+            release_date: req.body.release_date,
+        })
+        .then((movie) => res.send(movie));
+        res.redirect('/movies')
     },
     edit: function(req, res) {
-        // TODO
+        db.Movie.findByPk(req.params.id)
+        .then((movie) =>{
+            res.render('moviesEdit', {
+                movie
+            })
+        })
     },
     update: function (req,res) {
-        // TODO
+        db.Movie.update({
+            title: req.body.title,
+            rating: req.body.rating,
+            length: req.body.length,
+            awards: req.body.awards,
+            release_date: req.body.release_date,
+        }, {
+            where: {
+                id: req.params.id
+            }
+        })
+        res.redirect('/movies')
     },
     delete: function (req, res) {
-        // TODO
+        db
     },
     destroy: function (req, res) {
         // TODO
