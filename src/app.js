@@ -19,6 +19,7 @@ app.use(express.static(path.resolve(__dirname, '../public')));
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride('_method'));
 
+
 app.use('/', indexRouter);
 app.use(moviesRoutes);
 app.use(genresRoutes);

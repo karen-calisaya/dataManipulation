@@ -1,3 +1,5 @@
+const req = require('express/lib/request');
+const res = require('express/lib/response');
 const db = require('../database/models');
 const sequelize = db.sequelize;
 
@@ -52,7 +54,8 @@ const moviesController = {
             awards: req.body.awards,
             release_date: req.body.release_date,
         })
-        .then((movie) => res.send(movie));
+        .then((movie) => res.send(movie))
+        .catch((error) => res.send(error))
         res.redirect('/movies')
     },
     edit: function(req, res) {
@@ -62,6 +65,7 @@ const moviesController = {
                 movie
             })
         })
+        .catch((error) => res.send(error))
     },
     update: function (req,res) {
         db.Movie.update({
@@ -75,13 +79,28 @@ const moviesController = {
                 id: req.params.id
             }
         })
+        .catch((error) => res.send(error))
         res.redirect('/movies')
     },
     delete: function (req, res) {
-        db
+        db.Movie.findByPk(req.params.id)
+        .then((movie) => {
+            res.render('moviesDelete', {
+                movie
+            })
+        })
+        .catch((error) => res.send(error))
     },
     destroy: function (req, res) {
-        // TODO
+        db.Movie.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+        .then(() => res.send()) /* enviaba el error con la varible movie, y aparecia 'express deprecated res.send(status): Use res.sendStatus(status)instead */
+        .catch((error) => res.send(error))
+        res.redirect('/movies')
+        
     }
 
 }
